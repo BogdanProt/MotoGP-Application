@@ -430,7 +430,7 @@ public:
 
 class Race{
     char* date;
-    char* weather;
+    char* name;
     Track track;
     int numSponsors;
     int sponsorsAmount;
@@ -440,11 +440,11 @@ class Race{
 public:
     //Constructors
 
-    Race(const char* date, const char* weather, Track track, int numSponsors, int sponsorsAmount, double ticketPrice, int ticketsSold){
+    Race(const char* date, const char* name, Track track, int numSponsors, int sponsorsAmount, double ticketPrice, int ticketsSold){
         this->date = new char[strlen(date) + 1];
         strcpy(this->date, date);
-        this->weather = new char[strlen(weather) + 1];
-        strcpy(this->weather, weather);
+        this->name = new char[strlen(name) + 1];
+        strcpy(this->name, name);
         this->track = track;
         this->numSponsors = numSponsors;
         this->sponsorsAmount = sponsorsAmount;
@@ -452,11 +452,11 @@ public:
         this->ticketsSold = ticketsSold;
     }
 
-    Race(const char* date, const char* weather, Track track){
+    Race(const char* date, const char* name, Track track){
         this->date = new char[strlen(date) + 1];
         strcpy(this->date, date);
-        this->weather = new char[strlen(weather) + 1];
-        strcpy(this->weather, weather);
+        this->name = new char[strlen(name) + 1];
+        strcpy(this->name, name);
         this->track = track;
         numSponsors = 0;
         sponsorsAmount = 0;
@@ -467,8 +467,8 @@ public:
     Race(const char* date, Track track){
         this->date = new char[strlen(date) + 1];
         strcpy(this->date, date);
-        this->weather = new char[1];
-        weather[0] = '\0';
+        this->name = new char[1];
+        name[0] = '\0';
         this->track = track;
         numSponsors = 0;
         sponsorsAmount = 0;
@@ -479,8 +479,8 @@ public:
     Race(const Race& race){         //Copy constructor
         this->date = new char[strlen(race.date) + 1];
         strcpy(this->date, race.date);
-        this->weather = new char[strlen(race.weather) + 1];
-        strcpy(this->weather, race.weather);
+        this->name = new char[strlen(race.name) + 1];
+        strcpy(this->name, race.name);
         track = race.track;
         sponsorsAmount = race.sponsorsAmount;
         numSponsors = race.numSponsors;
@@ -491,8 +491,8 @@ public:
     Race(){
         this->date = new char[1];
         date[0] = '\0';
-        this->weather = new char[1];
-        weather[0] = '\0';
+        this->name = new char[1];
+        name[0] = '\0';
         numSponsors = 0;
         sponsorsAmount = 0;
         ticketPrice = 0;
@@ -503,7 +503,7 @@ public:
 
     ~Race(){
         delete[] date;
-        delete[] weather;
+        delete[] name;
     }
 
     Race& operator=(const Race& race){        // "=" operator overload
@@ -511,9 +511,9 @@ public:
             delete[] this->date;
             this->date = new char[strlen(race.date) + 1];
             strcpy(this->date, race.date);
-            delete[] this->weather;
-            this->weather = new char[strlen(race.weather) + 1];
-            strcpy(this->weather, race.weather);
+            delete[] this->name;
+            this->name = new char[strlen(race.name) + 1];
+            strcpy(this->name, race.name);
             this->track = race.track;
             this->sponsorsAmount = race.sponsorsAmount;
             this->numSponsors = race.numSponsors;
@@ -525,7 +525,7 @@ public:
 
     friend ostream& operator<<(ostream& out, const Race& race){         // "<<" operator overload
         out << "Date: " << race.date << endl;
-        out << "Weather: " << race.weather << endl;
+        out << "Name: " << race.name << endl;
         out << "TRACK \n" << race.track << endl;
         out << "Sponsors amount: " << race.sponsorsAmount << endl;
         out << "Number of sponsors: " << race.numSponsors << endl;
@@ -562,10 +562,10 @@ public:
         strcpy(this->date, date);
     }
 
-    void set_weather(const char* weather){
-        delete[] this->weather;
-        this->weather = new char[strlen(weather) + 1];
-        strcpy(this->weather, weather);
+    void set_name(const char* name){
+        delete[] this->name;
+        this->name = new char[strlen(name) + 1];
+        strcpy(this->name, name);
     }
 
     void set_track(const Track& track) { this->track = track; }
@@ -582,7 +582,7 @@ public:
 
     const char* get_date() const { return this->date; }
 
-    const char* get_weather() const { return this->weather; }
+    const char* get_name() const { return this->name; }
 
     Track get_track() const { return this->track; }
 
@@ -606,188 +606,50 @@ double calculate_race_profit(const Race& race){         //Calculates a given rac
     return totalRaceProfit;
 }
 
-
-class Rider{
-    char* name;
-    char* nationality;
-    int age;
-    int noWins;
-    int totalChampionships;
-    Team team;
-    Motorcycle bike;
-
-public:
-    //Constructors
-
-    Rider(const char* name, const char* nationality, int age, int noWins, int totalChampionships, Team team, Motorcycle bike){
-        this->name = new char[strlen(name) + 1];
-        strcpy(this->name, name);
-        this->nationality = new char[strlen(nationality) + 1];
-        strcpy(this->nationality, nationality);
-        this->age = age;
-        this->noWins = noWins;
-        this->totalChampionships = totalChampionships;
-        this->team = team;
-        this->bike = bike;
-    }
-
-    Rider(const char* name, const char* nationality, int age, Team team){
-        this->name = new char[strlen(name) + 1];
-        strcpy(this->name, name);
-        this->nationality = new char[strlen(nationality) + 1];
-        strcpy(this->nationality, nationality);
-        this->age = age;
-        noWins = 0;
-        totalChampionships = 0;
-        this->team = team;
-    }
-
-    Rider(const char* name, const char* nationality, int age){
-        this->name = new char[strlen(name) + 1];
-        strcpy(this->name, name);
-        this->nationality = new char[strlen(nationality) + 1];
-        strcpy(this->nationality, nationality);
-        age = 0;
-        noWins = 0;
-        totalChampionships = 0;
-    }
-
-    Rider(const Rider& rider){          //Copy constructor
-        name = new char[strlen(rider.name) + 1];
-        strcpy(name, rider.name);
-        nationality = new char[strlen(rider.nationality) + 1];
-        strcpy(nationality, rider.nationality);
-        age = rider.age;
-        noWins = rider.noWins;
-        totalChampionships = rider.totalChampionships;
-        team = rider.team;
-        bike = rider.bike;
-    }
-
-    Rider(){
-        name = new char[1];
-        name[0] = '\0';
-        nationality = new char[1];
-        nationality[0] = '\0';
-        age = 0;
-        noWins = 0;
-        totalChampionships = 0;
-    }
-
-    //Destructor
-
-    ~Rider(){
-        delete[] name;
-        delete[] nationality;
-    }
-
-    Rider& operator=(const Rider& rider){       // "=" operator overload
-        if (this != &rider){
-            delete[] name;
-            name = new char[strlen(rider.name) + 1];
-            strcpy(name, rider.name);
-            delete[] nationality;
-            nationality = new char[strlen(rider.nationality) + 1];
-            age = rider.age;
-            noWins = rider.noWins;
-            totalChampionships = rider.totalChampionships;
-            team = rider.team;
-            bike = rider.bike;
-        }
-        return *this;
-    }
-
-    friend ostream& operator<<(ostream& out, const Rider& rider){       // "<<" operator overload
-        out << "Name: " << rider.name << endl;
-        out << "Nationality: " << rider.nationality << endl;
-        out << "Age: " << rider.age << endl;
-        out << "Number of wins: " << rider.noWins << endl;
-        out << "Total championships won: " << rider.totalChampionships << endl;
-        out << "TEAM \n" << rider.team << endl;
-        out << "BIKE \n" << rider.bike << endl;
-        return out;
-    }
-
-    //Setters
-
-    void set_name(const char* name){
-        delete[] this->name;
-        this->name = new char[strlen(name) + 1];
-        strcpy(this->name, name);
-    }
-
-    void set_nationality(const  char* nationality){
-        delete[] this->nationality;
-        this->nationality = new char[strlen(nationality) + 1];
-        strcpy(this->nationality, nationality);
-    }
-
-    void set_age(int age) { this->age = age; }
-
-    void set_noWins(int noWins) { this->noWins = noWins; }
-
-    void set_totalChampionships(int totalChampionships) { this->totalChampionships = totalChampionships; }
-
-    void set_team(const Team& team) { this->team = team; }
-
-    void set_bike(const Motorcycle& bike) { this->bike = bike; }
-
-    //Getters
-
-    const char* get_name() const { return this->name; }
-
-    const char* get_nationality() const { return this->nationality; }
-
-    int get_age() const { return this->age; }
-
-    int get_noWins() const { return this->noWins; }
-
-    int get_totalChampionships() const { return this->totalChampionships; }
-
-    Team get_team() const { return this->team; }
-
-    Motorcycle get_bike() const { return this->bike; }
-
-
-};
-
-
 class Team{
     char* name;
-    Rider rider1;
-    Rider rider2;
+    char* rider1name;
+    char* rider2name;
     double points;
 
 public:
     //Constructors
 
-    Team(const char* name, Rider rider1, Rider rider2, double points){
+    Team(const char* name, const char* rider1name, const char* rider2name, double points){
         this->name = new char[strlen(name) + 1];
         strcpy(this->name, name);
-        this->rider1 = rider1;
-        this->rider2 = rider2;
+        this->rider1name = new char[strlen(rider1name) + 1];
+        strcpy(this->rider1name, rider1name);
+        this->rider2name = new char[strlen(rider2name) + 1];
+        strcpy(this->rider2name, rider2name);
         this->points = points;
     }
 
-    Team(const char* name, Rider rider1, Rider rider2){
+    Team(const char* name, const char* rider1name, const char* rider2name){
         this->name = new char[strlen(name) + 1];
         strcpy(this->name, name);
-        this->rider1 = rider1;
-        this->rider2 = rider2;
+        this->rider1name = new char[strlen(rider1name) + 1];
+        strcpy(this->rider1name, rider1name);
+        this->rider2name = new char[strlen(rider2name) + 1];
+        strcpy(this->rider2name, rider2name);
         points = 0;
     }
 
     Team(const Team& team){         //Copy constructors
         name = new char[strlen(team.name) + 1];
         strcpy(name, team.name);
-        rider1 = team.rider1;
-        rider2 = team.rider2;
+        rider1name = new char[strlen(team.rider1name) + 1];
+        strcpy(rider1name, team.rider1name);
+        rider2name = new char[strlen(team.rider2name) + 1];
+        strcpy(rider2name, team.rider2name);
         points = team.points;
     }
 
     Team(){
         name = new char[1];
         name[0] = '\0';
+        rider1name = new char[1];
+        rider1name[0] = '\0';
         points = 0;
     }
 
@@ -795,6 +657,8 @@ public:
 
     ~Team(){
         delete[] name;
+        delete[] rider1name;
+        delete[] rider2name;
     }
 
     Team& operator=(const Team& team){      // "=" operator overload
@@ -802,8 +666,12 @@ public:
             delete[] this->name;
             name = new char[strlen(team.name) + 1];
             strcpy(name, team.name);
-            rider1 = team.rider1;
-            rider2 = team.rider2;
+            delete[] rider1name;
+            rider1name = new char[strlen(team.rider1name) + 1];
+            strcpy(rider1name, team.rider1name);
+            delete[] rider2name;
+            rider2name = new char[strlen(team.rider2name) + 1];
+            strcpy(rider2name, team.rider2name);
             points = team.points;
         }
         return *this;
@@ -811,9 +679,9 @@ public:
 
     friend ostream& operator<<(ostream& out, const Team& team){     // "<<" operator overload
         out << "Name: " << team.name << endl;
-        out << "FIRST RIDER \n" << team.rider1 << endl;
-        out << "SECOND RIDER \n" << team.rider2 << endl;
-        out << "Points " << team.points << endl;
+        out << "First rider: " << team.rider1name << endl;
+        out << "Second rider: " << team.rider2name << endl;
+        out << "Points: " << team.points << endl;
         return out;
     }
 
@@ -829,80 +697,376 @@ public:
         strcpy(this->name, name);
     }
 
-    void set_rider1(const Rider& rider1) { this->rider1 = rider1; }
+    void set_rider1name(const char* rider1name) {
+        delete[] this->rider1name;
+        this->rider1name = new char[strlen(rider1name) + 1];
+        strcpy(this->rider1name, rider1name);
+    }
 
-    void set_rider2(const Rider& rider2) { this->rider2 = rider2; }
+    void set_rider2name(const char* rider2name) {
+        delete[] this->rider2name;
+        this->rider2name = new char[strlen(rider2name) + 1];
+        strcpy(this->rider2name, rider2name);
+    }
 
     void set_points(double points) { this->points = points; }
 
     //Getters
 
-    const char* get_name() { return name; }
+    const char* get_name() const { return name; }
 
-    Rider get_rider1() { return rider1; }
+    const char* get_rider1name() const { return rider1name; }
 
-    Rider get_rider2() { return rider2; }
+    const char* get_rider2name() const { return rider2name; }
 
-    double get_points() { return points; }
+    double get_points() const { return points; }
 
 
 };
+
+
+class Rider{
+    char *riderName;
+    char *nationality;
+    char *teamName;
+    int age;
+    int totalWins;
+    int championshipsWon;
+    Motorcycle riderBike;
+
+public:
+    //Constructors
+
+    Rider(const char* riderName, const char* nationality, const char* teamName, int age, int totalWins, int championshipsWon, Motorcycle riderBike){
+        this->riderName = new char[strlen(riderName) + 1];
+        strcpy(this->riderName, riderName);
+        this->nationality = new char[strlen(nationality) + 1];
+        strcpy(this->nationality, nationality);
+        this->teamName = new char[strlen(teamName) + 1];
+        strcpy(this->teamName, teamName);
+        this->age = age;
+        this->totalWins = totalWins;
+        this->championshipsWon = championshipsWon;
+        this->riderBike = riderBike;
+    }
+
+    Rider(const char* riderName, const char* nationality, const char* teamName, int age){
+        this->riderName = new char[strlen(riderName) + 1];
+        strcpy(this->riderName, riderName);
+        this->nationality = new char[strlen(nationality) + 1];
+        strcpy(this->nationality, nationality);
+        this->teamName = new char[strlen(teamName) + 1];
+        strcpy(this->teamName, teamName);
+        this->age = age;
+        totalWins = 0;
+        championshipsWon = 0;
+    }
+
+    Rider(const char* riderName, const char* nationality, int age){
+        this->riderName = new char[strlen(riderName) + 1];
+        strcpy(this->riderName, riderName);
+        this->nationality = new char[strlen(nationality) + 1];
+        strcpy(this->nationality, nationality);
+        teamName = new char[1];
+        teamName[0] = '\0';
+        this->age = age;
+        totalWins = 0;
+        championshipsWon = 0;
+    }
+
+    Rider(){
+        this->riderName = new char[1];
+        riderName[0] = '\0';
+        this->nationality = new char[1];
+        nationality[0] = '\0';
+        this->teamName = new char[1];
+        teamName[0] = '\0';
+        age = 0;
+        totalWins = 0;
+        championshipsWon = 0;
+    }
+
+    //Destructor
+
+    ~Rider(){
+        delete[] riderName;
+        delete[] nationality;
+        delete[] teamName;
+    }
+
+    Rider& operator=(const Rider& rider){       // "=" operator overload
+        if (this != &rider){
+            delete[] this->riderName;
+            this->riderName = new char[strlen(rider.riderName) + 1];
+            strcpy(this->riderName, rider.riderName);
+            delete[] this->nationality;
+            this->nationality = new char[strlen(rider.nationality) + 1];
+            strcpy(this->nationality, rider.nationality);
+            delete[] this->teamName;
+            this->teamName = new char[strlen(rider.teamName) + 1];
+            strcpy(this->teamName, rider.teamName);
+            age = rider.age;
+            totalWins = rider.totalWins;
+            championshipsWon = rider.championshipsWon;
+            riderBike = rider.riderBike;
+        }
+        return *this;
+    }
+
+    friend ostream& operator<<(ostream& out, const Rider& rider){       // "<<" operator overload
+        out << "Name: " << rider.riderName << endl;
+        out << "Nationality: " << rider.nationality << endl;
+        out << "Team: " << rider.teamName << endl;
+        out << "Age: " << rider.age << endl;
+        out << "Total wins: " << rider.totalWins << endl;
+        out << "Championships won: " << rider.championshipsWon << endl;
+        out << "BIKE \n" << rider.riderBike << endl;
+        return out;
+    }
+
+    //Setters
+
+    void set_riderName(const char* riderName){
+        delete[] this->riderName;
+        this->riderName = new char[strlen(riderName) + 1];
+        strcpy(this->riderName, riderName);
+    }
+
+    void set_nationality(const char* nationality){
+        delete[] this->nationality;
+        this->nationality = new char[strlen(nationality) + 1];
+        strcpy(this->nationality, nationality);
+    }
+
+    void set_teamName(const char* teamName){
+        delete[] this->teamName;
+        this->teamName = new char[strlen(teamName) + 1];
+        strcpy(this->teamName, teamName);
+    }
+
+    void set_age(int age) { this->age = age; }
+
+    void set_totalWins(int totalWins) { this->totalWins = totalWins; }
+
+    void set_championshipsWon(int championshipsWon) { this->championshipsWon = championshipsWon; }
+
+    void set_riderBike(const Motorcycle& riderBike) { this->riderBike = riderBike; }
+
+    //Getters
+
+    const char* get_riderName() const { return this->riderName; }
+
+    const char* get_nationality() const { return this->nationality; }
+
+    const char* get_teamName() const { return this->teamName; }
+
+    int get_age() const { return this->age; }
+
+    int get_totalWins() const { return this->totalWins; }
+
+    int get_championshipsWon() const { return this->championshipsWon; }
+
+    const Motorcycle& get_riderBike() const { return this->riderBike; }
+
+
+};
+
+void sort_leaderboards(double teamLeaderboards[11], int indexTeamLB[11]){
+    for (int i=0; i<11; i++)
+        indexTeamLB[i] = i;
+
+    for (int i=0; i<10; i++)
+        for (int j=i+1; j<11; j++)
+            if (teamLeaderboards[i] < teamLeaderboards[j]){
+                double aux = teamLeaderboards[i];
+                teamLeaderboards[i] = teamLeaderboards[j];
+                teamLeaderboards[j] = aux;
+                aux = indexTeamLB[i];
+                indexTeamLB[i] = indexTeamLB[j];
+                indexTeamLB[j] = aux;
+            }
+}
+
+
 
 
 int main(){
 
     //Motorcycles
 
-    Motorcycle(250, 1000, 350, "Ducati", "Desmosedici GP");
-    Motorcycle(255, 1000, 350, "Aprilia", "RS-GP");
-    Motorcycle(240, 1000, 350, "Yamaha", "YZR-M1");
-    Motorcycle(250, 1000, 350, "Honda", "RC213V");
-    Motorcycle(265, 1000, 355, "KTM", "RC16");
+    Motorcycle desmosedici(250, 1000, 350, "Ducati", "Desmosedici GP");
+    Motorcycle rsgp(255, 1000, 350, "Aprilia", "RS-GP");
+    Motorcycle yzrm1(240, 1000, 350, "Yamaha", "YZR-M1");
+    Motorcycle rc213v(250, 1000, 350, "Honda", "RC213V");
+    Motorcycle rc16(265, 1000, 355, "KTM", "RC16");
 
     //Sponsors
 
-    Sponsor("Pertamina", "Money and drinks", 575000);
-    Sponsor("Michelin", "Money and tires", 525000);
-    Sponsor("Red Bull", "Money and drinks", 700000);
-    Sponsor("Guru by Gryfyn", "Money", 675000);
-    Sponsor("Tissot", "Money and watches", 590000);
-    Sponsor("Shark", "Money and helmets", 475000);
-    Sponsor("Oakley", "Money and equipment", 500000);
-    Sponsor("Monster Energy", "Money and drinks", 700000);
-    Sponsor("Liqui Moly", "Money and oil", 540000);
-    Sponsor("Motul", "Money and oil", 545000);
-    Sponsor("CryptoData", "Money", 750000);
-    Sponsor("Animoca Brands", "Money", 775000);
-    Sponsor("OR", "Money, oil and fuel", 450000);
-    Sponsor("Petronas", "Money and lubricants", 50000);
+    Sponsor pertamina("Pertamina", "Money and drinks", 575000);
+    Sponsor michelin("Michelin", "Money and tires", 525000);
+    Sponsor redbull("Red Bull", "Money and drinks", 700000);
+    Sponsor guru("Guru by Gryfyn", "Money", 675000);
+    Sponsor tissot("Tissot", "Money and watches", 590000);
+    Sponsor shark("Shark", "Money and helmets", 475000);
+    Sponsor oakley("Oakley", "Money and equipment", 500000);
+    Sponsor monster("Monster Energy", "Money and drinks", 700000);
+    Sponsor liquimoly("Liqui Moly", "Money and oil", 540000);
+    Sponsor motul("Motul", "Money and oil", 545000);
+    Sponsor cryptodatasp("CryptoData", "Money", 750000);
+    Sponsor animocabrands("Animoca Brands", "Money", 775000);
+    Sponsor OR("OR", "Money, oil and fuel", 450000);
+    Sponsor petronas("Petronas", "Money and lubricants", 50000);
 
     //Tracks
 
-    Track("GRANDE PRÉMIO TISSOT DE PORTUGAL", "Portugal", 4.6, 15, 13000);
-    Track("GRAN PREMIO MICHELIN® DE LA REPÚBLICA ARGENTINA", "Argentina", 4.8, 14, 11500);
-    Track("RED BULL GRAND PRIX OF THE AMERICAS", "America", 5.5, 20, 15000);
-    Track("GRAN PREMIO MOTOGP™ GURU BY GRYFYN DE ESPAÑA", "Spain", 4.4, 13, 13700);
-    Track("SHARK GRAND PRIX DE FRANCE", "France", 4.2, 12, 12750);
-    Track("GRAN PREMIO D’ITALIA OAKLEY", "Italy", 5.2, 15, 13500);
-    Track("LIQUI MOLY MOTORRAD GRAND PRIX DEUTSCHLAND", "Germany", 3.7, 13, 15250);
-    Track("MOTUL TT ASSEN", "Netherlands", 4.5, 18, 12100);
-    Track("GRAND PRIX OF KAZAKHSTAN", "Kazakhstan", 4.4, 13, 10300);
-    Track("MONSTER ENERGY BRITISH GRAND PRIX", "Great Britain", 5.9, 18, 17200);
-    Track("CRYPTODATA MOTORRAD GRAND PRIX VON ÖSTERREICH", "Austria", 4.3, 11, 14000);
-    Track("GRAN PREMI MONSTER ENERGY DE CATALUNYA", "Spain-Catalunya", 4.7, 14, 14300);
-    Track("GRAN PREMIO RED BULL DI SAN MARINO E DELLA RIVIERA DI RIMINI", "San Marino", 4.2, 16, 9900);
-    Track("GRAND PRIX OF INDIA", "India", 5, 16, 10500);
-    Track("MOTUL GRAND PRIX OF JAPAN", "Japan", 4.8, 14, 18000);    
-    Track("PERTAMINA GRAND PRIX OF INDONESIA", "Indonesia", 4.3, 17, 11200);
-    Track("ANIMOCA BRANDS AUSTRALIAN MOTORCYCLE GRAND PRIX", "Australia", 4.4, 12, 13400);
-    Track("OR THAILAND GRAND PRIX", "Thailand", 4.6, 12, 10900);
-    Track("PETRONAS GRAND PRIX OF MALAYSIA", "Malaysia", 5.5, 15, 9500);
-    Track("QATAR AIRWAYS GRAND PRIX OF QATAR", "Qatar", 5.4, 16, 19300);
-    Track("GRAN PREMIO MOTUL DE LA COMUNITAT VALENCIANA", "Valencia", 4, 14, 12400);
-
+    Track trackPortugal("Autódromo Internacional do Algarve", "Portugal", 4.6, 15, 13000);
+    Track trackArgentina("Termas de Río Hondo", "Argentina", 4.8, 14, 11500);
+    Track trackAmerica("Circuit of The Americas", "America", 5.5, 20, 15000);
+    Track trackSpain("Circuito de Jerez - Angel Nieto", "Spain", 4.4, 13, 13700);
+    Track trackFrance("Le Mans", "France", 4.2, 12, 12750);
+    Track trackItaly("Autodromo Internazionale del Mugello", "Italy", 5.2, 15, 13500);
+    Track trackGermany("Sachsenring", "Germany", 3.7, 13, 15250);
+    Track trackNetherlands("TT Circuit Assen", "Netherlands", 4.5, 18, 12100);
+    Track trackKazakhstan("Sokol International Circuit", "Kazakhstan", 4.4, 13, 10300);
+    Track trackBritain("Silverstone Circuit", "Great Britain", 5.9, 18, 17200);
+    Track trackAustria("Red Bull Ring - Spielberg", "Austria", 4.3, 11, 14000);
+    Track trackCatalunya("Circuit de Barcelona-Catalunya", "Spain-Catalunya", 4.7, 14, 14300);
+    Track trackSanMarino("Misano World Circuit Marco Simoncelli", "San Marino", 4.2, 16, 9900);
+    Track trackIndia("Buddh International Circuit", "India", 5, 16, 10500);
+    Track trackJapan("Mobility Resort Motegi", "Japan", 4.8, 14, 18000);    
+    Track trackIndonesia("Pertamina Mandalika Circuit", "Indonesia", 4.3, 17, 11200);
+    Track trackAustralia("Phillip Island", "Australia", 4.4, 12, 13400);
+    Track trackThailand("Chang International Circuit", "Thailand", 4.6, 12, 10900);
+    Track trackMalaysia("Sepang International Circuit", "Malaysia", 5.5, 15, 9500);
+    Track trackQatar("Lusail International Circuit", "Qatar", 5.4, 16, 19300);
+    Track trackValencia("Circuit Ricardo Tormo", "Valencia", 4, 14, 12400);
 
     //Races
+    
+    Race racePortugal("26-03-2023", "Grande Prémio TISSOT de Portugal",trackPortugal);
+    Race raceArgentina("02-04-2023", "Gran Premio Michelin® de la República Argentina", trackArgentina);
+    Race raceAmerica("16-04-2023", "Red Bull Grand Prix of The Americas", trackAmerica);
+    Race raceSpain("30-04-2023", "Gran Premio MotoGP™ Guru by Gryfyn de España", trackSpain);
+    Race raceFrance("14-05-2023", "SHARK Grand Prix de France", trackFrance);
+    Race raceItaly("11-06-2023", "Gran Premio d’Italia Oakley", trackItaly);
+    Race raceGermany("18-06-2023", "Liqui Moly Motorrad Grand Prix Deutschland", trackGermany);
+    Race raceNetherlands("25-06-2023", "Motul TT Assen", trackNetherlands);
+    Race raceKazakhstan("09-07-2023", "Grand Prix of Kazakhstan", trackKazakhstan);
+    Race raceBritain("06-08-2023", "Monster Energy British Grand Prix", trackBritain);
+    Race raceAustria("20-08-2023", "CryptoDATA Motorrad Grand Prix von Österreich", trackAustria);
+    Race raceCatalunya("03-09-2023", "Gran Premi Monster Energy de Catalunya", trackCatalunya);
+    Race raceSanMarino("10-09-2023", "Gran Premio Red Bull di San Marino e della Riviera di Rimini", trackSanMarino);
+    Race raceIndia("24-09-2023", "Grand Prix of India", trackIndia);
+    Race raceJapan("01-10-2023", "Motul Grand Prix of Japan", trackJapan);
+    Race raceIndonesia("15-10-2023", "Pertamina Grand Prix of Indonesia", trackIndonesia);
+    Race raceAustralia("22-10-2023", "Animoca Brands Australian Motorcycle Grand Prix", trackAustralia);
+    Race raceThailand("29-10-2023", "OR Thailand Grand Prix", trackThailand);
+    Race raceMalaysia("12-11-2023", "PETRONAS Grand Prix of Malaysia", trackMalaysia);
+    Race raceQatar("19-11-2023", "Qatar Airways Grand Prix of Qatar", trackQatar);
+    Race raceValencia("26-11-2023", "Gran Premio Motul de la Comunitat Valenciana", trackValencia);
+
+    //Teams
+
+    Team apriliaRacing("Aprilia Racing", "Maverick Vinales", "Aleix Espargaro", 44);
+    Team cryptoData("CryptoDATA RNF MotoGP™ Team", "Raul Fernandez", "Miguel Oliveira", 5);
+    Team ducatiLenovo("Ducati Lenovo Team", "Francesco Bagnaia", "Enea Bastianini", 41);
+    Team gasgasFactory("GASGAS Factory Racing Tech3", "Augusto Fernandez", "Pol Espargaro", 8);
+    Team gresiniRacing("Gresini Racing MotoGP™", "Fabio Di Giannantonio", "Alex Marquez", 39);
+    Team lcrHonda("LCR Honda", "Takaaki Nakagami", "Alex Rins", 20);
+    Team monsterYamaha("Monster Energy Yamaha MotoGP™", "Fabio Quartararo", "Franco Morbidelli", 39);
+    Team mooneyVR46("Mooney VR46 Racing Team", "Luca Marini", "Marco Bezzecchi", 65);
+    Team primaPramac("Prima Pramac Racing", "Johann Zarco", "Jorge Martin", 57);
+    Team redbullKTM("Red Bull KTM Factory Racing", "Brad Binder", "Jack Miller", 47);
+    Team repsolHonda("Repsol Honda Team", "Joan Mir", "Marc Marquez", 12);
+
+    //Riders
+
+    Rider FrancescoBagnaia("Francesco Bagnaia", "Italy", "Ducati Lenovo Team", 26, 22, 2, desmosedici);
+    Rider JohannZarco("Johann Zarco", "France", "Prima Pramac Racing", 32, 16, 2, desmosedici);
+    Rider StefanBradl("Stefan Bradl", "Germany", "Repsol Honda Team", 33, 7, 1, rc213v);
+    Rider LucaMarini("Luca Marini", "Italy", "Mooney VR46 Racing Team", 24, 6, 0, desmosedici);
+    Rider MaverickVinales("Maverick Vinales", "Spain", "Aprilia Racing", 28, 25, 1, rsgp);
+    Rider FabioQuartararo("Fabio Quartararo", "France", "Monster Energy Yamaha MotoGP™", 22, 12, 1, yzrm1);
+    Rider FrancoMorbidelli("Franco Morbidelli", "Italy", "Monster Energy Yamaha MotoGP™", 28, 11, 1, yzrm1);
+    Rider EneaBastianini("Enea Bastianini", "Italy", "Ducati Lenovo Team", 24, 10, 1, desmosedici);
+    Rider RaulFernandez("Raul Fernandez", "Spain", "CryptoDATA RNF MotoGP Team", 22, 10, 0, rsgp);
+    Rider TakaakiNakagami("Takaaki Nakagami", "Japan", "LCR Honda", 31, 2, 0, rc213v);
+    Rider BradBinder("Brad Binder", "South Africa", "Red Bull KTM Factory Racing", 27, 17, 1, rc16);
+    Rider JoanMir("Joan Mir", "Spain", "Repsol Honda Team", 25, 12, 2, rc213v);
+    Rider AugustoFernandez("Augusto Fernandez", "Spain", "GASGAS Factory Racing Tech3", 25, 7, 1, rc16);
+    Rider AleixEspargaro("Aleix Espargaro", "Spain", "Aprilia Racing", 33, 1, 0, rsgp);
+    Rider AlexRins("Alex Rins", "Spain", "LCR Honda", 27, 17, 0, rc213v);
+    Rider JackMiller("Jack Miller", "Australia", "Red Bull KTM Factory Racing", 28, 10, 0, rc16);
+    Rider PolEspargaro("Pol Espargaro", "Spain", "GASGAS Factory Racing Tech3", 31, 15, 1, rc16);
+    Rider FabioDiGiannantonio("Fabio Di Giannantonio", "Italy", "Gresini Racing MotoGP™", 24, 3, 0, desmosedici);
+    Rider MichelePirro("Michele Pirro", "Italy", "Ducati Lenovo Team", 36, 1, 0, desmosedici);
+    Rider MarcoBezzecchi("Marco Bezzecchi", "Italy", "Mooney VR46 Racing Team", 24, 7, 0, desmosedici);
+    Rider AlexMarquez("Alex Marquez", "Spain", "Gresini Racing MotoGP™", 26, 12, 2, desmosedici);
+    Rider MiguelOliveira("Miguel Oliveira", "Portugal", "CryptoDATA RNF MotoGP Team", 28, 17, 0, rsgp);
+    Rider JorgeMartin("Jorge Martin", "Spain", "Prima Pramac Racing", 25, 11, 1, desmosedici);
+    Rider MarcMarquez("Marc Marquez", "Spain", "Repsol Honda Team", 30, 85, 8, rc213v);
+    Rider JonasFolger("Jonas Folger", "Germany", "GASGAS Factory Racing Tech3", 29, 5, 0, rc16);
+ 
+    racePortugal.add_sponsor(tissot);
+    racePortugal.set_ticketPrice(225);
+    racePortugal.sell_tickets(11523);
+    cout << "Portugal race profit: " << calculate_race_profit(racePortugal) << endl;
+
+    raceArgentina.add_sponsor(michelin);
+    raceArgentina.set_ticketPrice(170);
+    raceArgentina.sell_tickets(9733);
+    cout << "Argentina race profit: " << calculate_race_profit(raceArgentina) << endl;
+
+    double teamLeaderboards[11];
 
     
 
+    //Add points to the winning teams above ^^
+    teamLeaderboards[0] = apriliaRacing.get_points();
+    teamLeaderboards[1] = cryptoData.get_points();
+    teamLeaderboards[2] = ducatiLenovo.get_points();
+    teamLeaderboards[3] = gasgasFactory.get_points();
+    teamLeaderboards[4] = gresiniRacing.get_points();
+    teamLeaderboards[5] = lcrHonda.get_points();
+    teamLeaderboards[6] = monsterYamaha.get_points();
+    teamLeaderboards[7] = mooneyVR46.get_points();
+    teamLeaderboards[8] = primaPramac.get_points();
+    teamLeaderboards[9] = redbullKTM.get_points();
+    teamLeaderboards[10] = repsolHonda.get_points();
+
+    int indexTeamLB[11];
+
+    sort_leaderboards(teamLeaderboards, indexTeamLB);
+
+    cout << "TEAM LEADERBOARDS" << endl;
+    for (int i=0; i<10; i++)
+    {
+        cout << teamLeaderboards[i] << " ";
+        if (indexTeamLB[i] == 0) cout << apriliaRacing.get_name() << " ";
+        if (indexTeamLB[i] == 1) cout << cryptoData.get_name() << " ";
+        if (indexTeamLB[i] == 2) cout << ducatiLenovo.get_name() << " ";
+        if (indexTeamLB[i] == 3) cout << gasgasFactory.get_name() << " ";
+        if (indexTeamLB[i] == 4) cout << gresiniRacing.get_name() << " ";
+        if (indexTeamLB[i] == 5) cout << lcrHonda.get_name() << " ";
+        if (indexTeamLB[i] == 6) cout << monsterYamaha.get_name() << " ";
+        if (indexTeamLB[i] == 7) cout << mooneyVR46.get_name() << " ";
+        if (indexTeamLB[i] == 8) cout << primaPramac.get_name() << " ";
+        if (indexTeamLB[i] == 9) cout << redbullKTM.get_name() << " ";
+        if (indexTeamLB[i] == 10) cout << repsolHonda.get_name() << " ";
+        cout << endl;         
+    }
+
+
+    Motorcycle newBike;
+    cin >> newBike;
+    newBike.set_manufacturer("BMW");
+    newBike.set_model("S1000RR");
+    cout << "New bike has been added: \n" << newBike << endl;
+
+    Track newArgentinaTrack = move(trackArgentina);
+    newArgentinaTrack.set_noSeats(21000);
+    newArgentinaTrack.set_length(5.7);
+
+    cout << "New Argentina track has been upgraded: \n" << newArgentinaTrack << endl;
+    
 }
