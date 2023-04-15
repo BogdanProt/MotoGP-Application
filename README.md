@@ -29,5 +29,6 @@ Pentru aceasta clasa am implementat constructorul de copiere si am supraincarcat
 <br>
 <br>
 ### Functionalitati:
-***Calculeaza profitul total in urma unei curse, in functie de numarul de bilete vandute si de suma obtinuta in urma sponsorizarilor***
+***Calculeaza profitul total in urma unei curse in functie de numarul de bilete vandute si de suma obtinuta in urma sponsorizarilor***
+<br>
 ***Afiseaza leaderboard-ul actual al echipelor in functie de punctele obtinute de fiecare echipa in parte***
