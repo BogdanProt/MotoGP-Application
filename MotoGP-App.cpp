@@ -650,6 +650,8 @@ public:
         name[0] = '\0';
         rider1name = new char[1];
         rider1name[0] = '\0';
+        rider2name = new char[1];
+        rider2name[0] = '\0';
         points = 0;
     }
 
@@ -1068,5 +1070,29 @@ int main(){
     newArgentinaTrack.set_length(5.7);
 
     cout << "New Argentina track has been upgraded: \n" << newArgentinaTrack << endl;
+
+    //Test getters setters
+    cout << trackBritain.get_noSeats() << endl;
+    cout << racePortugal.get_track() << endl;
+    petronas.set_services("Money");
+    cout << petronas.get_services() << endl;
+
+    Sponsor newPetronas(petronas);
+    cout << newPetronas << endl;
+
+    //Test cout
+    cout << desmosedici << endl;
+    cout << trackPortugal << endl;
+    cout << raceAmerica << endl;
+    cout << mooneyVR46 << endl;
+    cout << FrancescoBagnaia << endl;
+
+    //Test "="
+    Team newTeam;
+    newTeam = apriliaRacing;
+    cout << newTeam;
+
+    
+
     
 }
