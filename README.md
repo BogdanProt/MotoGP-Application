@@ -3,6 +3,7 @@
 
 Motorcycle Grand Prix
 
-<h3>Clasele implementate: </h3>
+### Clasele implementate: 
 
-<p>
+***Motorcycle*** Contine specificatiile unei motociclete, si anume caii putere, capacitatea motorului, topspeed-ul, producatorul si modelul
+                 Pentru aceasta clasa am implementat si operatorul de mutare, cat si supraincarcarea operatorilor "=", "<<" si ">>"
