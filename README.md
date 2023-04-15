@@ -28,3 +28,6 @@ Pentru aceasta clasa am implementat constructorul de copiere si am supraincarcat
 ***Rider*** Contine detalii despre pilot, si anume numele, varsta, nationalitate, numele echipei la care este, victoriile si numarul de campionate castigate, cat si un obiect de tip Motorcycle care reprezinta motocicleta pilotului respectiv. Pentru aceasta clasa am supraincarcat operatorii "=" si "<<".
 <br>
 <br>
+### Functionalitati:
+***Calculeaza profitul total in urma unei curse, in functie de numarul de bilete vandute si de suma obtinuta in urma sponsorizarilor***
+***Afiseaza leaderboard-ul actual al echipelor in functie de punctele obtinute de fiecare echipa in parte***
