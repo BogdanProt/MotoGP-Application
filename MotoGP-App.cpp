@@ -1,5 +1,9 @@
 #include <iostream>
 #include <cstring>
+#include <exception>
+#include <vector>
+#include <algorithm>
+#include <memory>
 using namespace std;
 
 class Motorcycle{
@@ -84,7 +88,7 @@ public:
 
     //Destructor
 
-    ~Motorcycle(){
+    virtual ~Motorcycle(){
         delete[] this->manufacturer;
         delete[] this->model;
     }
@@ -157,6 +161,72 @@ public:
     const char* get_manufacturer() const { return this->manufacturer; }
 
     const char* get_model() const { return this->model; }
+
+    virtual void displayInfo() const {
+        cout << "Motorcycle information: \n";
+        cout << "Horsepower: " << hp << endl;
+        cout << "Engine capacity: " << engineCapacity << endl;
+        cout << "Top speed: " << topSpeed << endl;
+        cout << "Manufacturer: " << manufacturer << endl;
+        cout << "Model: " << model << endl;
+    }
+};
+
+
+class Superbike : public Motorcycle {
+protected:
+    int hp;
+    int engineCapacity;
+    int topSpeed;
+
+public:
+    Superbike(const char* manufacturer, const char* model, int _hp, int _engineCapacity, int _topSpeed)
+    : Motorcycle(manufacturer, model), hp(_hp), engineCapacity(_engineCapacity), topSpeed(_topSpeed) {}
+
+    void setHp(int hp) { this->hp = hp; }
+
+    void setEngineCapacity(int engineCapacity) { this->engineCapacity = engineCapacity; }
+
+    void setTopSpeed(int topSpeed) { this->topSpeed = topSpeed; }
+
+    int getHp() const { return hp; }
+
+    int getEngineCapacity() const { return engineCapacity; }
+
+    int getTopSpeed() const { return topSpeed; }
+
+    ~Superbike() {}
+
+    void displayInfo() const override {
+        cout << "Superbike information:" << endl;
+        cout << "Horsepower: " << hp << endl;
+        cout << "Engine capacity: " << engineCapacity << endl;
+        cout << "Top speed: " << topSpeed << endl;
+        cout << "Manufacturer: " << get_manufacturer() << endl;
+        cout << "Model: " << get_model() << endl;
+    }
+
+protected:
+    double calculateAverageFuelConsumption() const {
+        double averageFuelConsumption = 0.0;
+
+        averageFuelConsumption = (engineCapacity * 0.1) + (topSpeed * 0.05) - (hp * 0.02);
+        return averageFuelConsumption;
+    }
+
+
+};
+
+class MessageException : public exception {
+    string error;
+
+public:
+    MessageException(const string& message) : error(message) {}
+
+    const char* what() const noexcept override {
+        return error.c_str();
+    }
+
 };
 
 
@@ -428,7 +498,13 @@ public:
 
 };
 
-class Race{
+class DataInterface {
+public:
+    virtual void displayData() const = 0;
+    virtual void updateData() = 0;
+};
+
+class Race : public DataInterface {
     char* date;
     char* name;
     Track track;
@@ -436,6 +512,9 @@ class Race{
     int sponsorsAmount;
     double ticketPrice;
     int ticketsSold;
+
+protected:
+    static int totalRaces;
 
 public:
     //Constructors
@@ -450,6 +529,7 @@ public:
         this->sponsorsAmount = sponsorsAmount;
         this->ticketPrice = ticketPrice;
         this->ticketsSold = ticketsSold;
+        totalRaces++;
     }
 
     Race(const char* date, const char* name, Track track){
@@ -462,6 +542,7 @@ public:
         sponsorsAmount = 0;
         ticketPrice = 0;
         ticketsSold = 0;
+        totalRaces++;
     }
 
     Race(const char* date, Track track){
@@ -474,6 +555,7 @@ public:
         sponsorsAmount = 0;
         ticketPrice = 0;
         ticketsSold = 0;
+        totalRaces++;
     }
 
     Race(const Race& race){         //Copy constructor
@@ -497,14 +579,43 @@ public:
         sponsorsAmount = 0;
         ticketPrice = 0;
         ticketsSold = 0;
+        totalRaces++;
     }
 
     //Destructor
 
-    ~Race(){
+    virtual ~Race(){
         delete[] date;
         delete[] name;
     }
+
+    void displayData() const override {
+        cout << "Race information:\n";
+        cout << "Date: " << date << endl;
+        cout << "Name: " << name << endl;
+        cout << "Track: " << track.get_name() << endl;
+        cout << "Number of sponsors: " << numSponsors << endl;
+        cout << "Sponsorships amount: " << sponsorsAmount << endl;
+        cout << "Ticket price: " << ticketPrice << endl;
+        cout << "Tickets sold: " << ticketsSold << endl;
+    }
+
+    void updateData() override {
+        cout << "Enter new date: " << endl;
+        cin >> date;
+        cout << "Enter new name: " << endl;
+        cin >> name;
+        cout << "Enter new number of sponsors: " << endl;
+        cin >> numSponsors;
+        cout << "Enter new sponsorships amount: " << endl;
+        cin >> sponsorsAmount;
+        cout << "Enter new ticket price: " << endl;
+        cin >> ticketPrice;
+        cout << "Enter new number of tickets sold: " << endl;
+        cin >> ticketsSold;
+    }
+
+
 
     Race& operator=(const Race& race){        // "=" operator overload
         if (this != &race){
@@ -543,7 +654,7 @@ public:
         if (ticketsSold < track.get_noSeats())
             ticketsSold++;
         else
-            cout << "We cannot sell any more tickets! There are no seats left.";
+            throw MessageException("We cannot sell any more tickets!");
     }
 
     void sell_tickets(int n){           //Sells a given number of tickets
@@ -551,7 +662,7 @@ public:
             ticketsSold+=n;
         else if (ticketsSold + 1 <= track.get_noSeats())
             cout << "We have only sold " << track.get_noSeats() - ticketsSold << " tickets from the total of " << n << " tickets as there are no more seats left.";
-            else cout << "We cannot sell any more tickets! There are no seats left.";
+            else throw MessageException("We cannot sell any more tickets!");
     }
 
     //Setters
@@ -578,6 +689,8 @@ public:
 
     void set_ticketsSold(int ticketsSold) { this->ticketsSold = ticketsSold; }
 
+    
+
     //Getters
 
     const char* get_date() const { return this->date; }
@@ -594,7 +707,18 @@ public:
 
     int get_ticketsSold() const { return this->ticketsSold; }
 
+    static int get_totalRaces() { return totalRaces; }
+
+    virtual void startRace() = 0;
+    virtual void endRace() = 0;
+
+    static void reset_totalRaces() {
+        totalRaces = 0;
+    }
+
 };
+
+int Race::totalRaces = 0;
 
 
 double calculate_race_profit(const Race& race){         //Calculates a given race's total profit from sponsorships and tickets sold
@@ -603,8 +727,84 @@ double calculate_race_profit(const Race& race){         //Calculates a given rac
     int sponsorsAmount = race.get_sponsorsAmount();
     double totalRaceProfit;
     totalRaceProfit = ticketsSold * ticketPrice + sponsorsAmount;
+    if (race.get_ticketsSold() == 0 && race.get_sponsorsAmount() == 0)
+    {
+        throw MessageException("No profit from tickets nor sponsorships");
+        return 0;
+    }
+
     return totalRaceProfit;
 }
+
+
+class QualifyingRace : public Race {
+private:
+    int numLaps;
+    double fastestLapTime;
+
+public:
+    QualifyingRace(const char* _date, const char* _name, const Track& _track, int _numSponsors, int _sponsorsAmount, double _ticketPrice, int _ticketsSold, int _numLaps, double _fastestLapTime)
+    : Race(_date, _name, _track, _numSponsors, _sponsorsAmount, _ticketPrice, _ticketsSold), numLaps(_numLaps), fastestLapTime(_fastestLapTime) {}
+
+    QualifyingRace() : Race(){
+        numLaps = 0;
+        fastestLapTime = 0;
+    }
+
+    void setNumLaps(int _numLaps) { numLaps = _numLaps; }
+
+    void setFastestLapTime(double _fastestLapTime) { fastestLapTime = _fastestLapTime; }
+
+    int getNumLaps() const { return numLaps; }
+
+    double getFastestLapTime() const { return fastestLapTime; }
+
+    ~QualifyingRace() {}
+
+    void startRace() override {
+        cout << "Qualifying race has started!" << endl;
+    }
+
+    void endRace() override {
+        cout << "Qualifying race has ended!" << endl;
+    }
+};
+
+class MainRace : public Race {
+private:
+    int laps;
+    string winner;
+
+public:
+    MainRace(const char* _date, const char* _name, const Track& _track, int _numSponsors, int _sponsorsAmount, double _ticketPrice, int _ticketsSold, int _laps,  string _winner)
+    : Race(_date, _name, _track, _numSponsors, _sponsorsAmount, _ticketPrice, _ticketsSold), laps(_laps), winner(_winner) {}
+
+    MainRace() : Race(){
+        laps = 0;
+        winner = "No winner announced";
+    }
+
+    void setLaps(int _laps) { laps = _laps; }
+
+    void setWinner(string _winner) { winner = _winner; }
+
+    int getLaps() const { return laps; }
+
+    string getWinner() const { return winner; }
+
+    ~MainRace() {}
+
+    void startRace() override {
+        cout << "Main race has started!" << endl;
+    }
+
+    void endRace() override {
+        cout << "Main race has ended!" << endl;
+    }
+
+};
+
+
 
 class Team{
     char* name;
@@ -890,6 +1090,74 @@ void sort_leaderboards(double teamLeaderboards[11], int indexTeamLB[11]){
 }
 
 
+template<typename cont>
+
+class DataContainer {
+    vector<cont> data;
+
+public:
+    void addData(const cont& item){
+        data.push_back(item);
+    }
+
+    void printData() {
+        for (const auto& item : data) { cout << item << endl; }
+    }
+
+};
+
+template<typename ValueType>
+
+ValueType calculateSum(const vector<ValueType>& values){
+    ValueType sum = 0;
+    for (const ValueType& value : values){
+        sum += value;
+    }
+
+    return sum;
+}
+
+template<>
+class DataContainer<Track> {
+    vector<Track> data;
+
+public:
+
+    void addData(const Track& item){
+        data.push_back(item);
+    }
+
+    void printData() {
+        for (const auto& item : data) { cout << item << endl; }
+    }
+
+    bool searchData(const Track& item) const {
+        for (const Track& track : data) {
+            if (track.get_length() == item.get_length() && track.get_location() == item.get_location() && track.get_name() == item.get_name() && track.get_noSeats() == item.get_noSeats() && track.get_noTurns() == item.get_noTurns()) { return true; }
+        }
+        return false;
+    }
+
+    int getSize() const { return data.size(); }
+
+    void clearData() { data.clear(); }
+
+};
+
+
+class RaceFactory {
+// 1 - Main Race
+// 2 - Qualifying Race
+public:
+    static Race* startRace(const int& raceType) {
+        if (raceType == 1) { return new MainRace(); }
+        else if (raceType == 2){ return new QualifyingRace(); }
+        else return nullptr;
+    }
+
+};
+
+
 
 
 int main(){
@@ -945,27 +1213,27 @@ int main(){
 
     //Races
     
-    Race racePortugal("26-03-2023", "Grande Prémio TISSOT de Portugal",trackPortugal);
-    Race raceArgentina("02-04-2023", "Gran Premio Michelin® de la República Argentina", trackArgentina);
-    Race raceAmerica("16-04-2023", "Red Bull Grand Prix of The Americas", trackAmerica);
-    Race raceSpain("30-04-2023", "Gran Premio MotoGP™ Guru by Gryfyn de España", trackSpain);
-    Race raceFrance("14-05-2023", "SHARK Grand Prix de France", trackFrance);
-    Race raceItaly("11-06-2023", "Gran Premio d’Italia Oakley", trackItaly);
-    Race raceGermany("18-06-2023", "Liqui Moly Motorrad Grand Prix Deutschland", trackGermany);
-    Race raceNetherlands("25-06-2023", "Motul TT Assen", trackNetherlands);
-    Race raceKazakhstan("09-07-2023", "Grand Prix of Kazakhstan", trackKazakhstan);
-    Race raceBritain("06-08-2023", "Monster Energy British Grand Prix", trackBritain);
-    Race raceAustria("20-08-2023", "CryptoDATA Motorrad Grand Prix von Österreich", trackAustria);
-    Race raceCatalunya("03-09-2023", "Gran Premi Monster Energy de Catalunya", trackCatalunya);
-    Race raceSanMarino("10-09-2023", "Gran Premio Red Bull di San Marino e della Riviera di Rimini", trackSanMarino);
-    Race raceIndia("24-09-2023", "Grand Prix of India", trackIndia);
-    Race raceJapan("01-10-2023", "Motul Grand Prix of Japan", trackJapan);
-    Race raceIndonesia("15-10-2023", "Pertamina Grand Prix of Indonesia", trackIndonesia);
-    Race raceAustralia("22-10-2023", "Animoca Brands Australian Motorcycle Grand Prix", trackAustralia);
-    Race raceThailand("29-10-2023", "OR Thailand Grand Prix", trackThailand);
-    Race raceMalaysia("12-11-2023", "PETRONAS Grand Prix of Malaysia", trackMalaysia);
-    Race raceQatar("19-11-2023", "Qatar Airways Grand Prix of Qatar", trackQatar);
-    Race raceValencia("26-11-2023", "Gran Premio Motul de la Comunitat Valenciana", trackValencia);
+    MainRace racePortugal("26-03-2023", "Grande Prémio TISSOT de Portugal",trackPortugal, 2, 100000, 225, 350, 22, "Bezzecchi");
+    MainRace raceArgentina("02-04-2023", "Gran Premio Michelin® de la República Argentina", trackArgentina, 3, 125000, 225, 350, 21, "Marquez");
+    MainRace raceAmerica("16-04-2023", "Red Bull Grand Prix of The Americas", trackAmerica, 3, 225000, 275, 380, 24, "Marquez");
+    // MainRace raceSpain("30-04-2023", "Gran Premio MotoGP™ Guru by Gryfyn de España", trackSpain);
+    // MainRace raceFrance("14-05-2023", "SHARK Grand Prix de France", trackFrance);
+    // MainRace raceItaly("11-06-2023", "Gran Premio d’Italia Oakley", trackItaly);
+    // MainRace raceGermany("18-06-2023", "Liqui Moly Motorrad Grand Prix Deutschland", trackGermany);
+    // MainRace raceNetherlands("25-06-2023", "Motul TT Assen", trackNetherlands);
+    // MainRace raceKazakhstan("09-07-2023", "Grand Prix of Kazakhstan", trackKazakhstan);
+    // MainRace raceBritain("06-08-2023", "Monster Energy British Grand Prix", trackBritain);
+    // MainRace raceAustria("20-08-2023", "CryptoDATA Motorrad Grand Prix von Österreich", trackAustria);
+    // MainRace raceCatalunya("03-09-2023", "Gran Premi Monster Energy de Catalunya", trackCatalunya);
+    // MainRace raceSanMarino("10-09-2023", "Gran Premio Red Bull di San Marino e della Riviera di Rimini", trackSanMarino);
+    // MainRace raceIndia("24-09-2023", "Grand Prix of India", trackIndia);
+    // MainRace raceJapan("01-10-2023", "Motul Grand Prix of Japan", trackJapan);
+    // MainRace raceIndonesia("15-10-2023", "Pertamina Grand Prix of Indonesia", trackIndonesia);
+    // MainRace raceAustralia("22-10-2023", "Animoca Brands Australian Motorcycle Grand Prix", trackAustralia);
+    // MainRace raceThailand("29-10-2023", "OR Thailand Grand Prix", trackThailand);
+    // MainRace raceMalaysia("12-11-2023", "PETRONAS Grand Prix of Malaysia", trackMalaysia);
+    // MainRace raceQatar("19-11-2023", "Qatar Airways Grand Prix of Qatar", trackQatar);
+    // MainRace raceValencia("26-11-2023", "Gran Premio Motul de la Comunitat Valenciana", trackValencia);
 
     //Teams
 
@@ -1092,7 +1360,84 @@ int main(){
     newTeam = apriliaRacing;
     cout << newTeam;
 
+    //polimorfism executie
+    Superbike sb("Yamaha", "YZF", 35, 125, 120);
+    Race* race;
+    race = new MainRace("26-03-2023", "Grande Prémio TISSOT de Portugal",trackPortugal, 2, 100000, 225, 350, 22, "Bezzecchi");
+    race->startRace();
+
+    race = new QualifyingRace("26-03-2023", "Grande Prémio TISSOT de Portugal",trackPortugal, 2, 100000, 225, 350, 22, 37.9);
+    race->startRace();
+
+    Superbike desmosediciSB("Ducati", "Desmosedici", 250, 1000, 350);
+    Motorcycle* ptr1 = &desmosediciSB;
+    ptr1->displayInfo();
+
+    //upcasting
+    Superbike superbike("Ducati", "Desmosedici", 250, 1000, 350);
+    Motorcycle* motorcyclePtr = &superbike;
+
+    QualifyingRace qualifyingrace("26-03-2023", "Grande Prémio TISSOT de Portugal",trackPortugal, 2, 100000, 225, 350, 22, 37.9);
+    Race* racePtr = &qualifyingrace;
+
+    //downcasting
+    Race* racePtr2 = new QualifyingRace("26-03-2023", "Grande Prémio TISSOT de Portugal",trackPortugal, 2, 100000, 225, 350, 22, 37.9);
+    QualifyingRace* qualifyingRacePtr = dynamic_cast<QualifyingRace*>(racePtr2);
+    if (qualifyingRacePtr != nullptr){
+        qualifyingRacePtr->startRace();
+    }
+
+    Track pista1;
+    pista1.set_noSeats(120);
+
+    MainRace cursa1("16-04-2023", "Red Bull Grand Prix of The Americas", pista1, 3, 225000, 275, 380, 24, "Marquez");
+    cursa1.set_ticketsSold(0);
+    try {
+        for (int i = 0; i < 250; i++){
+            cursa1.sell_ticket();
+            cout << "Ticket sold successfully" << endl;
+        }
+    } catch (const MessageException& excep) {
+        cout << "Error: " << excep.what() << endl;
+    }
+
+    cout << Race::get_totalRaces() << endl;
+
+    Race::reset_totalRaces();
+
+    cout << Race::get_totalRaces() << endl;
+
+    //clasa sablon
+    DataContainer<Motorcycle> motorcycleContainer;
+    motorcycleContainer.addData(desmosedici);
+    motorcycleContainer.addData(rsgp);
+    motorcycleContainer.printData();
+
+    vector<int> DucatiScores = {95, 97, 92, 78, 85};
+    int totalScore = calculateSum<int>(DucatiScores);
+    cout << "Total Ducati Score: " << totalScore << endl;
+
+    vector<double> DucatiTimes = {1.34, 1.29, 1.32, 1.31, 1.30};
+    double totalLapTime = calculateSum<double>(DucatiTimes);
+    cout << "Total Ducati lap time: " << totalLapTime << endl;
+
+
+    DataContainer<Track> trackContainer;
+    trackContainer.addData(trackAmerica);
+    trackContainer.addData(trackCatalunya);
+    trackContainer.addData(trackAustria);
+    cout << trackContainer.getSize() << endl;
+    trackContainer.printData();
     
 
+    Race* racerace = RaceFactory::startRace(2);
+    racerace->startRace();
+
+    unique_ptr<Motorcycle> testMotorcycle = make_unique<Motorcycle>(250, 1000, 350, "Ducati", "Desmosedici GP");
+
+    shared_ptr<Motorcycle> ducatiMotorcycle = make_shared<Motorcycle>();
+
     
+    testMotorcycle->displayInfo();
+    ducatiMotorcycle->displayInfo();
 }
